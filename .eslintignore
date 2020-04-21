@@ -1,0 +1,8 @@
+node_modules/*
+tests/*
+.eslintrc.js
+.gitignore
+build/*
+registerServiceWorker.js
+coverage/*
+src/components/dashboard/data
