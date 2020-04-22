@@ -144,7 +144,7 @@ const gameSlice = createSlice({
     highestScore: 0,
     gameOver: false,
     won: {
-      status: true,
+      status: false,
       keepPlaying: false,
     },
     board: newGameState(),
@@ -176,7 +176,7 @@ const gameSlice = createSlice({
       const { payload } = action;
       let { board } = state;
       const boardLength = board.length;
-      console.log(JSON.parse(JSON.stringify(board)));
+      // console.log(JSON.parse(JSON.stringify(board)));
 
       const boardClone = _.cloneDeep(board);
       const isThereMoreMovementsAvailable = checkAvailableMovements(boardClone, payload);
@@ -187,7 +187,7 @@ const gameSlice = createSlice({
       }
 
       board = moveTiles(board, payload);
-      console.log(JSON.parse(JSON.stringify(board)));
+      // console.log(JSON.parse(JSON.stringify(board)));
 
       // If the user moved to a direction that didnt generate any change
       // We dont need to add any new value.
@@ -209,19 +209,6 @@ const gameSlice = createSlice({
         if (["up", "down"].includes(payload)) {
           minMaxY[config[payload]] = Math.floor(max / 2);
         }
-
-        // if (action.payload === "left") {
-        //   minMaxX[0] = Math.round(max / 2);
-        // }
-        // if (action.payload === "right") {
-        //   minMaxX[1] = Math.floor(max / 2);
-        // }
-        // if (action.payload === "up") {
-        //   minMaxY[0] = Math.round(max / 2);
-        // }
-        // if (action.payload === "down") {
-        //   minMaxY[1] = Math.floor(max / 2);
-        // }
 
         board = addRandomValueToMatrix(board, minMaxX, minMaxY);
       }
