@@ -1,81 +1,14 @@
 import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  rotateLeft,
-  rotateRight,
-  generateNumber,
-  addSameValues,
+  moveTiles,
   sumMatrixValues,
   getHighestTile,
+  addRandomValueToMatrix,
 } from "../utils/utils";
-
-const FOUR_PROBABILITY = 0.10;
-const WIN_SCORE = 2048;
-
-const moveRow = (movingRow, direction) => {
-  const len = movingRow.length;
-  let moved = false;
-
-  const { needToMove, row } = addSameValues(movingRow);
-
-  if (needToMove === false) {
-    return { moved, row };
-  }
-
-  // Move all the values to one side or the other
-  for (let i = 0; i < len * len; i++) {
-    const y = i % len;
-    if (y !== len - 1) {
-      if (["left", "up"].includes(direction)) {
-        // current is empty and next is not
-        if (row[y] === 0 && row[y + 1] !== 0) {
-          row[y] = row[y + 1]; // move next to current
-          row[y + 1] = 0;
-          moved = true;
-        }
-      }
-      if (["right", "down"].includes(direction)) {
-        // current is not empty and next is
-        if (row[y] !== 0 && row[y + 1] === 0) {
-          row[y + 1] = row[y]; // move current to next
-          row[y] = 0;
-          moved = true;
-        }
-      }
-    }
-  }
-
-  return { moved, row };
-};
-
-/**
- * Add a random value (2 || 4) in an available tile of the board
- * @param matrix: board
- * @param minMaxX: min / max value of the X axis
- * @param minMaxY: min / max value of the Y axis
- * @returns {*}
- */
-const addRandomValueToMatrix = (matrix, minMaxX, minMaxY) => {
-  const [minX, maxX] = minMaxY;
-  const [minY, maxY] = minMaxX;
-
-  const validCoords = [];
-  // Get the possible locations for a new number
-  // in the half of the board we are allow to insert a new item
-  for (let i = minX; i <= maxX; i++) {
-    for (let j = minY; j <= maxY; j++) {
-      if (matrix[i][j] === 0) {
-        validCoords.push([i, j]);
-      }
-    }
-  }
-  if (validCoords.length > 0) {
-    const randomCoord = _.random(0, (validCoords.length - 1));
-    const [x, y] = validCoords[randomCoord];
-    matrix[x][y] = generateNumber(FOUR_PROBABILITY);
-  }
-  return matrix;
-};
+import {
+  WIN_SCORE,
+} from "../config";
 
 const newGameState = () => {
   let defaultEmpty = [
@@ -89,28 +22,6 @@ const newGameState = () => {
 
   defaultEmpty = addRandomValueToMatrix(defaultEmpty, minMax, minMax);
   return addRandomValueToMatrix(defaultEmpty, minMax, minMax);
-};
-
-const moveTiles = (board, payload) => {
-  let nb = board;
-
-  if (["down", "up"].includes(payload)) {
-    nb = rotateLeft(nb);
-  }
-
-  const boardLength = nb.length;
-  for (let i = 0; i < boardLength; i++) {
-    const { moved, row } = moveRow(nb[i], payload);
-    if (moved === true) {
-      nb[i] = row;
-    }
-  }
-
-  if (["down", "up"].includes(payload)) {
-    nb = rotateRight(nb);
-  }
-
-  return nb;
 };
 
 /**
