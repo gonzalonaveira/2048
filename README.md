@@ -4,4 +4,4 @@
 An implementation of the 2048 game using React, Redux, Redux Toolkit and Styled components
 
 # Play it:
-![https://gonzalonaveira.github.io/2048/](https://gonzalonaveira.github.io/2048/)
+https://gonzalonaveira.github.io/2048/
